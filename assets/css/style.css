@@ -1,3 +1,36 @@
+body {
+  background-color: #90e0ef;
+}
+
+.iconeMeteoAujourdhui {
+  width: 90px;
+}
+
 .iconeMeteo {
-  width: 30px;
+  width: 50px;
+}
+
+.iconeMeteoSemaine {
+  width: 60px;
+}
+
+.adresse {
+  display: flex;
+}
+
+.heure {
+  font-size: 3rem;
+}
+
+.vent {
+  font-size: 0.7rem;
+}
+
+.container {
+  width: 95%;
+  background-color: #48cae4;
+}
+
+.borderMaintenant {
+  border-right: #c3dee4;
 }/*# sourceMappingURL=style.css.map */

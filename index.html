@@ -14,93 +14,100 @@
 
 <body>
 
+    <div class="adresse">
+        <input type="word" class="form-control w-100 rounded-0" id="lieuxChoisie"
+            placeholder="Exemple: Rouelles, FR"><button type="button" class="btn btn-primary rounded-0"
+            onclick="lieux()"><i class="bi bi-arrow-right"></i></button>
+    </div>
+
+
     <h1 class="m-3" id="ville">Ville</h1>
 
     <!-- LA TEMPERATURE MAINTENANT -->
-    <div class="container text-center border border-dark my-5">
+    <div class="container text-center my-2 rounded-3">
         <div class="row">
-            <div class="col">
-                <img src="assets/img/01.png" alt="météo maintenant" class="iconeMeteo" id="meteoMaintenant">
+            <div class="col-4">
+                <img src="assets/img/01.png" alt="météo maintenant" class="iconeMeteoAujourdhui" id="meteoMaintenant">
             </div>
-            <div class="col">
-                <p id="heureMaintenant">heure</p>
+            <div class="col-8">
+                <p id="heureMaintenant" class="heure mt-2 text-start">heure</p>
             </div>
-            <div class="col">
-                <p><i class="bi bi-thermometer-half" id="températureMaintenant"></i></p>
-            </div>
+
         </div>
         <div class="row">
-            <div class="col">
-                <p><i class="bi bi-wind" id="ventMaintenant">Vitesse vent</i></p>
+            <div class="col border-end border-light border-opacity-25">
+                <p><i class="bi bi-wind h6 " id="ventMaintenant">Vitesse vent</i></p>
+            </div>
+            <div class="col border-end border-light border-opacity-25">
+                <p><i class="bi bi-thermometer-half h4" id="températureMaintenant"></i></p>
             </div>
             <div class="col">
-                <p ><i class="bi bi-emoji-sunglasses" id="températureMaintenantRessenti"></i></p>
+                <p><i class="bi bi-emoji-sunglasses h4" id="températureMaintenantRessenti"></i></p>
             </div>
         </div>
     </div>
 
     <!-- TEMPERATURE DANS LES HEURES A VENIR -->
-    <div class="container text-center border border-dark my-5">
+    <div class="container text-center my-5 rounded-4">
         <div class="row">
-            <div class="col">
+            <div class="col border-end border-light border-opacity-25 pt-2">
                 <img src="assets/img/01.png" alt="météo 3h" class="iconeMeteo" id="meteo3h">
                 <div class="row">
-                    <p><i class="bi bi-thermometer-half" id="température3h"></i></p>
+                    <p id="température3h" class="mt-2 h1"></p>
                 </div>
                 <div class="row">
-                    <p><i class="bi bi-wind" id="vent3h">Vitesse vent</i></p>
+                    <p><i class="bi bi-wind vent" id="vent3h">Vitesse vent</i></p>
                 </div>
-                <div class="row">
-                    <p>Dans 3h</p>
+                <div class="row h5">
+                    <p>3h</p>
                 </div>
             </div>
-            <div class="col">
+            <div class="col border-end border-light border-opacity-25 pt-2">
                 <img src="assets/img/01.png" alt="météo 6h" class="iconeMeteo" id="meteo6h">
                 <div class="row">
-                    <p><i class="bi bi-thermometer-half" id="température6h"></i></p>
+                    <p id="température6h" class="mt-2 h1"></p>
                 </div>
                 <div class="row">
-                    <p><i class="bi bi-wind" id="vent6h">Vitesse vent</i></p>
+                    <p><i class="bi bi-wind vent" id="vent6h">Vitesse vent</i></p>
                 </div>
-                <div class="row">
-                    <p>Dans 6h</p>
+                <div class="row h5">
+                    <p>6h</p>
                 </div>
             </div>
-            <div class="col">
+            <div class="col border-end border-light border-opacity-25 pt-2">
                 <img src="assets/img/01.png" alt="météo 9h" class="iconeMeteo" id="meteo9h">
                 <div class="row">
-                    <p><i class="bi bi-thermometer-half" id="température9h"></i></p>
+                    <p id="température9h" class="mt-2 h1"></p>
                 </div>
                 <div class="row">
-                    <p><i class="bi bi-wind" id="vent9h">Vitesse vent</i></p>
+                    <p><i class="bi bi-wind vent" id="vent9h">Vitesse vent</i></p>
                 </div>
-                <div class="row">
-                    <p>Dans 9h</p>
+                <div class="row h5">
+                    <p>9h</p>
                 </div>
             </div>
-            <div class="col">
+            <div class="col pt-2">
                 <img src="assets/img/01.png" alt="météo 12h" class="iconeMeteo" id="meteo12h">
                 <div class="row">
-                    <p><i class="bi bi-thermometer-half" id="température12h"></i></p>
+                    <p id="température12h" class="mt-2 h1"></p>
                 </div>
                 <div class="row">
-                    <p><i class="bi bi-wind" id="vent12h">Vitesse vent</i></p>
+                    <p><i class="bi bi-wind vent" id="vent12h">Vitesse vent</i></p>
                 </div>
-                <div class="row">
-                    <p>Dans 12h</p>
+                <div class="row h5">
+                    <p>12h</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- DEMAIN -->
-     <div id="jourSuivant">
+    <!-- JOUR SUIVANT-->
+    <div id="jourSuivant">
 
-     </div>
+    </div>
 
-    <!-- ET LES JOURS AVENIR -->
 
-    
+
 
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="assets/js/script.js"></script>
