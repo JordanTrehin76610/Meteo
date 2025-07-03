@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>METEO</title>
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="node_modules/bootstrap-icons/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
 
 </head>
 
@@ -18,40 +20,21 @@
     <div class="container text-center border border-dark my-5">
         <div class="row">
             <div class="col">
-                <p>icone météo</p>
+                <img src="assets/img/01.png" alt="météo maintenant" class="iconeMeteo" id="meteoMaintenant">
             </div>
             <div class="col">
-                <p>heure</p>
+                <p id="heureMaintenant">heure</p>
             </div>
             <div class="col">
-                <p>degrés</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <p>Degrés ressenti</p>
-            </div>
-            <div class="col">
-                <p>Vitesse vent</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- ALERTE -->
-    <div class="container text-center border border-dark my-5">
-        <div class="row">
-            <div class="col">
-                <p>Nature de l'alerte</p>
+                <p><i class="bi bi-thermometer-half" id="températureMaintenant"></i></p>
             </div>
         </div>
         <div class="row">
             <div class="col">
-                <p>Description</p>
+                <p><i class="bi bi-wind" id="ventMaintenant">Vitesse vent</i></p>
             </div>
-        </div>
-        <div class="row">
             <div class="col">
-                <p>Durée/Temp</p>
+                <p ><i class="bi bi-emoji-sunglasses" id="températureMaintenantRessenti"></i></p>
             </div>
         </div>
     </div>
@@ -60,25 +43,49 @@
     <div class="container text-center border border-dark my-5">
         <div class="row">
             <div class="col">
-                <p>icone</p>
+                <img src="assets/img/01.png" alt="météo 3h" class="iconeMeteo" id="meteo3h">
+                <div class="row">
+                    <p><i class="bi bi-thermometer-half" id="température3h"></i></p>
+                </div>
+                <div class="row">
+                    <p><i class="bi bi-wind" id="vent3h">Vitesse vent</i></p>
+                </div>
                 <div class="row">
                     <p>Dans 3h</p>
                 </div>
             </div>
             <div class="col">
-                <p>icone</p>
+                <img src="assets/img/01.png" alt="météo 6h" class="iconeMeteo" id="meteo6h">
+                <div class="row">
+                    <p><i class="bi bi-thermometer-half" id="température6h"></i></p>
+                </div>
+                <div class="row">
+                    <p><i class="bi bi-wind" id="vent6h">Vitesse vent</i></p>
+                </div>
                 <div class="row">
                     <p>Dans 6h</p>
                 </div>
             </div>
             <div class="col">
-                <p>icone</p>
+                <img src="assets/img/01.png" alt="météo 9h" class="iconeMeteo" id="meteo9h">
+                <div class="row">
+                    <p><i class="bi bi-thermometer-half" id="température9h"></i></p>
+                </div>
+                <div class="row">
+                    <p><i class="bi bi-wind" id="vent9h">Vitesse vent</i></p>
+                </div>
                 <div class="row">
                     <p>Dans 9h</p>
                 </div>
             </div>
             <div class="col">
-                <p>icone</p>
+                <img src="assets/img/01.png" alt="météo 12h" class="iconeMeteo" id="meteo12h">
+                <div class="row">
+                    <p><i class="bi bi-thermometer-half" id="température12h"></i></p>
+                </div>
+                <div class="row">
+                    <p><i class="bi bi-wind" id="vent12h">Vitesse vent</i></p>
+                </div>
                 <div class="row">
                     <p>Dans 12h</p>
                 </div>
@@ -87,24 +94,9 @@
     </div>
 
     <!-- DEMAIN -->
-    <div class="container text-center border border-dark my-5">
-        <div class="row">
-            <div class="col">
-                <p>icone météo</p>
-            </div>
-            <div class="col">
-                <p>degrés</p>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <p>Degrés ressenti</p>
-            </div>
-            <div class="col">
-                <p>Vitesse vent</p>
-            </div>
-        </div>
-    </div>
+     <div id="jourSuivant">
+
+     </div>
 
     <!-- ET LES JOURS AVENIR -->
 
