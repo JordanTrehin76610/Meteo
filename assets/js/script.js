@@ -11,7 +11,17 @@ avoirLaMeteo(url)
 function lieux() {
     city = document.getElementById("lieuxChoisie").value
     url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&lang=${langue}&units=${unite}`
-    avoirLaMeteo(url)
+
+    // TEST SI LA VILLE EST VALIDE EN REGARDER SI L'URL RENVOIE UNE ERREUR 404
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data.cod === "404") {
+                alert("Ville non trouvée !");
+                return;
+            }
+            avoirLaMeteo(url);
+        })
 }
 
 function avoirLaMeteo(url) {
@@ -63,61 +73,38 @@ function avoirLaMeteo(url) {
 
 
             // DANS LA SEMAINE A VENIR (je peux avoir que 4 jours à l'avenir)
-            let heureSemaine = []
             let tempSemaine = []
             let tempSemaineRessent = []
             let ventSemaine = []
             let codeCielSemaine = []
 
-            //PLEIN DE IF POUR ESSAYER DE VISER LA JOURNEE VERS 15H (POUR CA QU'ON DEMARRE DE DIFFERENTE VALEUR AVEC I)
-            if (maintenant[0] == 1 && maintenant[1] <= 3) {
-                for (let i = 1; i < meteo.list.length; i = i + 4) {
+            // heuresVoulues = [18, 24, 42, 48, 66, 72, 90, 96] //Me permet d'avoir le milieu de la matiné et de la journée
+            // for (let i = 0; i < meteo.list.length; i++) {
+            //     const heure = i * 3;
+            //     if (heuresVoulues.includes(heure)) {
+            //         tempSemaine.push(Math.round(meteo.list[i].main.temp));
+            //         tempSemaineRessent.push(Math.round(meteo.list[i].main.feels_like));
+            //         ventSemaine.push(Math.round(meteo.list[i].wind.speed * 3.6));
+            //         codeCielSemaine.push(ciel(i));
+            //         console.log(`heure est de + ${heure} et je suis la liste ${i}`);
+            //     }
+            // }
 
+            heuresCibles = ["09:00:00", "15:00:00"]
+
+            for (let i = 0; i < meteo.list.length; i++) {
+                date = new Date(meteo.list[i].dt_txt)
+                jour = date.getDate(); //On choppe la date
+                heure = meteo.list[i].dt_txt.slice(11) //on regarde son heure
+
+                // On saute aujourd'hui
+                if (jour === now.getDate()) {
+                    ""
+                } else if (heuresCibles.includes(heure)) { //Si son heure correspond à nos objectifs alors c bon
                     tempSemaine.push(Math.round(meteo.list[i].main.temp))
                     tempSemaineRessent.push(Math.round(meteo.list[i].main.feels_like))
-                    ventSemaine.push(Math.round((meteo.list[i].wind.speed) * 3.6))
+                    ventSemaine.push(Math.round(meteo.list[i].wind.speed * 3.6))
                     codeCielSemaine.push(ciel(i))
-
-                }
-            }
-            else if (maintenant[0] == 0 && maintenant[1] <= 9 && maintenant[1] > 5) {
-                for (let i = 2; i < meteo.list.length; i = i + 4) {
-
-                    tempSemaine.push(Math.round(meteo.list[i].main.temp))
-                    tempSemaineRessent.push(Math.round(meteo.list[i].main.feels_like))
-                    ventSemaine.push(Math.round((meteo.list[i].wind.speed) * 3.6))
-                    codeCielSemaine.push(ciel(i))
-
-                }
-            }
-            else if (maintenant[0] == 0 && maintenant[1] <= 5) {
-                for (let i = 3; i < meteo.list.length; i = i + 4) {
-
-                    tempSemaine.push(Math.round(meteo.list[i].main.temp))
-                    tempSemaineRessent.push(Math.round(meteo.list[i].main.feels_like))
-                    ventSemaine.push(Math.round((meteo.list[i].wind.speed) * 3.6))
-                    codeCielSemaine.push(ciel(i))
-
-                }
-            }
-            else if ((maintenant[0] == 1 && maintenant[1] >= 9) || (maintenant[0] == 2)) {
-                for (let i = 5; i < meteo.list.length; i = i + 4) {
-
-                    tempSemaine.push(Math.round(meteo.list[i].main.temp))
-                    tempSemaineRessent.push(Math.round(meteo.list[i].main.feels_like))
-                    ventSemaine.push(Math.round((meteo.list[i].wind.speed) * 3.6))
-                    codeCielSemaine.push(ciel(i))
-
-
-                }
-            } else {
-                for (let i = 0; i < meteo.list.length; i = i + 4) {
-
-                    tempSemaine.push(Math.round(meteo.list[i].main.temp))
-                    tempSemaineRessent.push(Math.round(meteo.list[i].main.feels_like))
-                    ventSemaine.push(Math.round((meteo.list[i].wind.speed) * 3.6))
-                    codeCielSemaine.push(ciel(i))
-
                 }
             }
 
@@ -172,7 +159,7 @@ function avoirLaMeteo(url) {
                 let jourNom = joursSemaine[jourIndex];
 
                 document.getElementById("jourSuivant").innerHTML += `
-        <p id="jour" class="h3 ms-2">${jourNom}</p>
+        <p id="jour" class="h3 ms-2 text-lg-center">${jourNom}</p>
         <div class="container text-center mt-0 mb-5 rounded-4">
         <div class="row mt-2">
             <div class="col">
@@ -199,45 +186,45 @@ function avoirLaMeteo(url) {
 
             // MODIF INTERFACE DANS PLUSIEUR JOURS
             // DEMAIN
-            document.getElementById("meteoJour+1M").src = `assets/img/${codeCielSemaine[1]}.png`   //MATIN
-            document.getElementById("meteoJour+1A").src = `assets/img/${codeCielSemaine[2]}.png`   //APRES MIDI
-            document.getElementById("températureJour+1M").innerText = `${tempSemaine[1]}°`
-            document.getElementById("températureJour+1A").innerText = `${tempSemaine[2]}°`
-            document.getElementById("températureJour+1RessentiM").innerText = `${tempSemaineRessent[1]}°`
-            document.getElementById("températureJour+1RessentiA").innerText = `${tempSemaineRessent[2]}°`
-            document.getElementById("ventJour+1M").innerText = `${ventSemaine[1]}`
-            document.getElementById("ventJour+1A").innerText = `${ventSemaine[2]} km/h`
+            document.getElementById("meteoJour+1M").src = `assets/img/${codeCielSemaine[0]}.png`   //MATIN
+            document.getElementById("meteoJour+1A").src = `assets/img/${codeCielSemaine[1]}.png`   //APRES MIDI
+            document.getElementById("températureJour+1M").innerText = `${tempSemaine[0]}°`
+            document.getElementById("températureJour+1A").innerText = `${tempSemaine[1]}°`
+            document.getElementById("températureJour+1RessentiM").innerText = `${tempSemaineRessent[0]}°`
+            document.getElementById("températureJour+1RessentiA").innerText = `${tempSemaineRessent[1]}°`
+            document.getElementById("ventJour+1M").innerText = `${ventSemaine[0]}`
+            document.getElementById("ventJour+1A").innerText = `${ventSemaine[1]} km/h`
 
             // DANS 2 JOUR
-            document.getElementById("meteoJour+2M").src = `assets/img/${codeCielSemaine[3]}.png`
-            document.getElementById("meteoJour+2A").src = `assets/img/${codeCielSemaine[4]}.png`
-            document.getElementById("températureJour+2M").innerText = `${tempSemaine[3]}°`
-            document.getElementById("températureJour+2A").innerText = `${tempSemaine[4]}°`
-            document.getElementById("températureJour+2RessentiM").innerText = `${tempSemaineRessent[3]}°`
-            document.getElementById("températureJour+2RessentiA").innerText = `${tempSemaineRessent[4]}°`
-            document.getElementById("ventJour+2M").innerText = `${ventSemaine[3]}`
-            document.getElementById("ventJour+2A").innerText = `${ventSemaine[4]} km/h`
+            document.getElementById("meteoJour+2M").src = `assets/img/${codeCielSemaine[2]}.png`
+            document.getElementById("meteoJour+2A").src = `assets/img/${codeCielSemaine[3]}.png`
+            document.getElementById("températureJour+2M").innerText = `${tempSemaine[2]}°`
+            document.getElementById("températureJour+2A").innerText = `${tempSemaine[3]}°`
+            document.getElementById("températureJour+2RessentiM").innerText = `${tempSemaineRessent[2]}°`
+            document.getElementById("températureJour+2RessentiA").innerText = `${tempSemaineRessent[3]}°`
+            document.getElementById("ventJour+2M").innerText = `${ventSemaine[2]}`
+            document.getElementById("ventJour+2A").innerText = `${ventSemaine[3]} km/h`
 
 
             //DANS 3 JOUR
-            document.getElementById("meteoJour+3M").src = `assets/img/${codeCielSemaine[5]}.png`
-            document.getElementById("meteoJour+3A").src = `assets/img/${codeCielSemaine[6]}.png`
-            document.getElementById("températureJour+3M").innerText = `${tempSemaine[5]}°`
-            document.getElementById("températureJour+3A").innerText = `${tempSemaine[6]}°`
-            document.getElementById("températureJour+3RessentiM").innerText = `${tempSemaineRessent[5]}°`
-            document.getElementById("températureJour+3RessentiA").innerText = `${tempSemaineRessent[6]}°`
-            document.getElementById("ventJour+3M").innerText = `${ventSemaine[5]}`
-            document.getElementById("ventJour+3A").innerText = `${ventSemaine[6]} km/h`
+            document.getElementById("meteoJour+3M").src = `assets/img/${codeCielSemaine[4]}.png`
+            document.getElementById("meteoJour+3A").src = `assets/img/${codeCielSemaine[5]}.png`
+            document.getElementById("températureJour+3M").innerText = `${tempSemaine[4]}°`
+            document.getElementById("températureJour+3A").innerText = `${tempSemaine[5]}°`
+            document.getElementById("températureJour+3RessentiM").innerText = `${tempSemaineRessent[4]}°`
+            document.getElementById("températureJour+3RessentiA").innerText = `${tempSemaineRessent[5]}°`
+            document.getElementById("ventJour+3M").innerText = `${ventSemaine[4]}`
+            document.getElementById("ventJour+3A").innerText = `${ventSemaine[5]} km/h`
 
             //DANS 4 JOUR
-            document.getElementById("meteoJour+4M").src = `assets/img/${codeCielSemaine[7]}.png`
-            document.getElementById("meteoJour+4A").src = `assets/img/${codeCielSemaine[8]}.png`
-            document.getElementById("températureJour+4M").innerText = `${tempSemaine[7]}°`
-            document.getElementById("températureJour+4A").innerText = `${tempSemaine[8]}°`
-            document.getElementById("températureJour+4RessentiM").innerText = `${tempSemaineRessent[7]}°`
-            document.getElementById("températureJour+4RessentiA").innerText = `${tempSemaineRessent[8]}°`
-            document.getElementById("ventJour+4M").innerText = `${ventSemaine[7]}`
-            document.getElementById("ventJour+4A").innerText = `${ventSemaine[8]} km/h`
+            document.getElementById("meteoJour+4M").src = `assets/img/${codeCielSemaine[6]}.png`
+            document.getElementById("meteoJour+4A").src = `assets/img/${codeCielSemaine[7]}.png`
+            document.getElementById("températureJour+4M").innerText = `${tempSemaine[6]}°`
+            document.getElementById("températureJour+4A").innerText = `${tempSemaine[7]}°`
+            document.getElementById("températureJour+4RessentiM").innerText = `${tempSemaineRessent[6]}°`
+            document.getElementById("températureJour+4RessentiA").innerText = `${tempSemaineRessent[7]}°`
+            document.getElementById("ventJour+4M").innerText = `${ventSemaine[6]}`
+            document.getElementById("ventJour+4A").innerText = `${ventSemaine[7]} km/h`
 
 
 
@@ -252,9 +239,7 @@ function avoirLaMeteo(url) {
                 nuage = meteo.list[i].clouds.all
                 pluie = meteo.list[i].weather[0].id
                 heure = [now.getHours()]
-                console.log(`Avant changement: ${heure}`)
                 heure = +heure + (i * 3)
-                console.log(`Après changement: ${heure}`)
                 if (dansCiel == "Clear" && heure < 22) {
                     return "01"
                 }

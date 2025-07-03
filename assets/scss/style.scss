@@ -1,5 +1,4 @@
 body {
-    // background-image: radial-gradient(circle farthest-corner at 10% 20%, rgba(202, 248, 255, 1) 0%, rgba(186, 204, 227, 1) 51.2%, rgba(117, 144, 179, 1) 100.1%);
     background-color: #90e0ef;
 }
 
@@ -35,4 +34,11 @@ body {
 
 .borderMaintenant {
     border-right: #c3dee4;
+}
+
+@media (min-width: 1024px) {
+    .heure {
+        font-size: 3rem;
+        margin-left: 25rem;
+    }
 }

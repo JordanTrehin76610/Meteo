@@ -33,4 +33,11 @@ body {
 
 .borderMaintenant {
   border-right: #c3dee4;
+}
+
+@media (min-width: 1024px) {
+  .heure {
+    font-size: 3rem;
+    margin-left: 25rem;
+  }
 }/*# sourceMappingURL=style.css.map */
