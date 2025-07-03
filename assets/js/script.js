@@ -39,7 +39,6 @@ function avoirLaMeteo(url) {
 
             let now = new Date()
             let maintenant = [now.getHours(), now.getMinutes()]
-            console.log(maintenant)
             maintenant.splice(1, 0, "h")
             if (maintenant[2] < 10) {
                 maintenant.splice(2, 0, 0)
@@ -47,7 +46,6 @@ function avoirLaMeteo(url) {
             if (maintenant[0] < 10) {
                 maintenant.splice(0, 0, 0)
             }
-            console.log(maintenant)
 
             let tempMaintenantRessent = Math.round(meteo.list[0].main.feels_like)
 
@@ -87,7 +85,6 @@ function avoirLaMeteo(url) {
 
                 // On saute aujourd'hui
                 if (jour === now.getDate()) {
-                    console.log(`Date courante: ${date.toLocaleString()}, Heure: ${heure}, Jour aujourd’hui: ${now.getDate()}`);
                     continue;
                 } else if (heuresCibles.includes(heure)) { //Si son heure correspond à nos objectifs alors c bon
                     tempSemaine.push(Math.round(meteo.list[i].main.temp))
