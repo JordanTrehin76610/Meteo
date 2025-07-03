@@ -30,15 +30,15 @@ function avoirLaMeteo(url) {
         .then(data => {
 
             console.log(data)
-            meteo = data
+            let meteo = data
 
-            ville = meteo.city.name
+            let ville = meteo.city.name
             console.log(`ville visée: ${ville}`)
 
-            tempMaintenant = Math.round(meteo.list[0].main.temp)
+            let tempMaintenant = Math.round(meteo.list[0].main.temp)
 
-            const now = new Date()
-            maintenant = [now.getHours(), now.getMinutes()]
+            let now = new Date()
+            let maintenant = [now.getHours(), now.getMinutes()]
             console.log(maintenant)
             maintenant.splice(1, 0, "h")
             if (maintenant[2] < 10) {
@@ -49,9 +49,9 @@ function avoirLaMeteo(url) {
             }
             console.log(maintenant)
 
-            tempMaintenantRessent = Math.round(meteo.list[0].main.feels_like)
+            let tempMaintenantRessent = Math.round(meteo.list[0].main.feels_like)
 
-            ventMaintenant = Math.round((meteo.list[0].wind.speed) * 3.6)
+            let ventMaintenant = Math.round((meteo.list[0].wind.speed) * 3.6)
 
 
             // HEURE A VENIR
@@ -65,7 +65,7 @@ function avoirLaMeteo(url) {
                 tempAVenir.push(Math.round((meteo.list[i].main.temp)))
                 tempAVenirRessent.push(meteo.list[i].main.feels_like)
                 ventAVenir.push(Math.round((meteo.list[i].wind.speed) * 3.6))
-                codeCielAVenir.push(ciel(i))
+                codeCielAVenir.push(ciel(meteo.list[i]))
             }
 
 
@@ -78,42 +78,24 @@ function avoirLaMeteo(url) {
             let ventSemaine = []
             let codeCielSemaine = []
 
-            // heuresVoulues = [18, 24, 42, 48, 66, 72, 90, 96] //Me permet d'avoir le milieu de la matiné et de la journée
-            // for (let i = 0; i < meteo.list.length; i++) {
-            //     const heure = i * 3;
-            //     if (heuresVoulues.includes(heure)) {
-            //         tempSemaine.push(Math.round(meteo.list[i].main.temp));
-            //         tempSemaineRessent.push(Math.round(meteo.list[i].main.feels_like));
-            //         ventSemaine.push(Math.round(meteo.list[i].wind.speed * 3.6));
-            //         codeCielSemaine.push(ciel(i));
-            //         console.log(`heure est de + ${heure} et je suis la liste ${i}`);
-            //     }
-            // }
 
-            heuresCibles = ["09:00:00", "15:00:00"]
-
+            let heuresCibles = ["09", "15"]
             for (let i = 0; i < meteo.list.length; i++) {
-                date = new Date(meteo.list[i].dt_txt)
-                jour = date.getDate(); //On choppe la date
-                heure = meteo.list[i].dt_txt.slice(11) //on regarde son heure
+                let date = new Date(meteo.list[i].dt_txt)
+                let jour = date.getDate(); //On choppe la date
+                let heure = meteo.list[i].dt_txt.slice(11, 13) //on regarde son heure
 
                 // On saute aujourd'hui
                 if (jour === now.getDate()) {
-                    ""
+                    console.log(`Date courante: ${date.toLocaleString()}, Heure: ${heure}, Jour aujourd’hui: ${now.getDate()}`);
+                    continue;
                 } else if (heuresCibles.includes(heure)) { //Si son heure correspond à nos objectifs alors c bon
                     tempSemaine.push(Math.round(meteo.list[i].main.temp))
                     tempSemaineRessent.push(Math.round(meteo.list[i].main.feels_like))
                     ventSemaine.push(Math.round(meteo.list[i].wind.speed * 3.6))
-                    codeCielSemaine.push(ciel(i))
+                    codeCielSemaine.push(ciel(meteo.list[i]))
                 }
             }
-
-
-
-
-
-
-
 
 
 
@@ -124,7 +106,7 @@ function avoirLaMeteo(url) {
             document.getElementById("températureMaintenant").textContent = `${tempMaintenant}°`
             document.getElementById("températureMaintenantRessenti").innerText = `${tempMaintenantRessent}°`
             document.getElementById("ventMaintenant").innerText = `${ventMaintenant} km/h`
-            codeCiel = ciel(0)
+            let codeCiel = ciel(meteo.list[0])
             document.getElementById("meteoMaintenant").src = `assets/img/${codeCiel}.png`
 
 
@@ -227,24 +209,13 @@ function avoirLaMeteo(url) {
             document.getElementById("ventJour+4A").innerText = `${ventSemaine[7]} km/h`
 
 
-
-
-
-
-
-
             //FONCTION (PENSER A REVENIR POUR CONFIG ORAGE ET NEIGE)
-            function ciel(i) {
-                dansCiel = meteo.list[i].weather[0].main
-                nuage = meteo.list[i].clouds.all
-                pluie = meteo.list[i].weather[0].id
-                heure = [now.getHours()]
-                heure = +heure + (i * 3)
-                if (dansCiel == "Clear" && heure < 22) {
+            function ciel(meteoItem) {
+                let dansCiel = meteoItem.weather[0].main
+                let nuage = meteoItem.clouds.all
+                let pluie = meteoItem.weather[0].id
+                if (dansCiel == "Clear") {
                     return "01"
-                }
-                if (dansCiel == "Clear" && heure >= 22) {
-                    return "00"
                 }
                 if (dansCiel == "Clouds" && nuage < 50) {
                     return "02"
