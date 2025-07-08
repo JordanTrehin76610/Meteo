@@ -1,12 +1,47 @@
-let city = "Rouelles"
-let zip = "76600"
+let city = ""
+let zip = ""
 let country = ""
 let apiKey = "142fa27ef3629e56358aebb03acba4f1"
 let langue = "fr"
 let unite = "metric"
 let url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&lang=${langue}&units=${unite}`
 
-avoirLaMeteo(url)
+geolocation()
+
+
+function geolocation() {
+    if (confirm("Voulez-vous activer la geolocalition ?") == true) {
+        navigator.geolocation.getCurrentPosition((position) => {
+
+            latitude = position.coords.latitude //Je choppe la latitude
+            longitude = position.coords.longitude // Je choppe la longitude
+            urlCity = `http://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&limit=5&appid=${apiKey}` // Je m'en sert et ça me retourne un JSON
+
+            fetch(urlCity)
+                .then(response => response.json())
+                .then(data => {
+
+                    console.log(data)
+
+                    //JSON que j'exploite pour chopper le lieu le plus proche
+                    city = data[0].name
+                    state = data[0].state
+                    country = data[0].country
+                    console.log(`ville: ${city}, state: ${state} et country: ${country}`)
+                    url = `http://api.openweathermap.org/data/2.5/forecast?q=${city},${state},${country}&appid=${apiKey}&lang=${langue}&units=${unite}`
+                    avoirLaMeteo(url)
+                })
+        })
+    } else {
+        city = "aucun" //Commune française, c rigolo ^^
+        url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&lang=${langue}&units=${unite}`
+        console.log("ville par défault activé")
+        avoirLaMeteo(url)
+    }
+}
+
+
+
 
 function lieux() {
     city = document.getElementById("lieuxChoisie").value
@@ -23,6 +58,9 @@ function lieux() {
             avoirLaMeteo(url);
         })
 }
+
+
+
 
 function avoirLaMeteo(url) {
     fetch(url)
