@@ -10,7 +10,9 @@ geolocation()
 
 
 function geolocation() {
-    if (confirm("Voulez-vous activer la geolocalition ?") == true) {
+
+    
+    if ("geolocation" in navigator) {
         navigator.geolocation.getCurrentPosition((position) => {
 
             latitude = position.coords.latitude //Je choppe la latitude
