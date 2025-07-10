@@ -1,2 +1,2 @@
-Site web (mobile first) de météo. Paramêtre de base sur Rouelles mais vous pouvez changer.  
+Site web (mobile first) de météo. Géolocalisation possible mais si vous refusez alors ça apparaît sur la commune Aucun en France.  
 Attention à bien spécifier la ville pour vous retrouver à Rome, Italie et non pas Rome, US.
