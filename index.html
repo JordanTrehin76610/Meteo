@@ -23,6 +23,32 @@
     </div>
 
 
+    
+    <!-- SECTION FAVORIS -->
+    <div class="d-flex justify-content-between mx-lg-5 my-lg-4 favorisBG">
+        <a class="btn btn-primary rounded-0" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button"
+            aria-controls="offcanvasExample">
+            Vos favoris
+        </a>
+        <button type="button" class="btn btn-primary rounded-0" onclick="ajoutFavoris()" id="ajoutFavorisBtn"><i class="bi bi-star"></i></button>
+    </div>
+    <div class="offcanvas favorisBG offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel">Vos favoris</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div>
+                Vous pouvez ajouter des villes à vos favoris en cliquant sur le bouton "Ajouter aux favoris" dans la
+                section météo de la ville.
+            </div>
+            <div class="mt-2" id="favoris"></div> <!-- Ici on affiche les villes favorites -->
+        </div>
+    </div>
+
+
+
+
     <h1 class="m-3 text-lg-center" id="ville">Ville</h1>
 
     <!-- LA TEMPERATURE MAINTENANT -->
@@ -108,14 +134,6 @@
 
     </div>
 
-
-    <div class="text-center">
-        <i class="bi bi-wind h6 mx-lg-5" id="ventMaintenant">:Vitesse vent</i>
-        <br class="jump">
-        <i class="bi bi-thermometer-half h6 mx-lg-5" id="températureMaintenant">:Température réelle</i>
-        <br class="jump">
-        <i class="bi bi-emoji-sunglasses h6 mx-lg-5" id="températureMaintenantRessenti">: Température ressenti</i>
-    </div>
 
 
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>

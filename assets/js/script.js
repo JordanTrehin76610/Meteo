@@ -5,14 +5,16 @@ let apiKey = "142fa27ef3629e56358aebb03acba4f1"
 let langue = "fr"
 let unite = "metric"
 let url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&lang=${langue}&units=${unite}`
+let cityAllFav = []
 
 
+favoris()
 geolocation()
 
 
 function geolocation() {
 
-    
+
     if (confirm("Voulez-vous activer la geolocalition ? (Activer position si oui)") == true) {
         navigator.geolocation.getCurrentPosition((position) => {
 
@@ -62,7 +64,112 @@ function lieux() {
         })
 }
 
+function goFavoris(city) {
+    url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&lang=${langue}&units=${unite}`
 
+    // TEST SI LA VILLE EST VALIDE EN REGARDER SI L'URL RENVOIE UNE ERREUR 404
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data.cod === "404") {
+                alert("Ville non trouvée !");
+                return;
+            }
+            avoirLaMeteo(url);
+        })
+}
+
+
+function ajoutFavoris() {
+    favCity = window.localStorage.getItem(`favCity`)
+
+    // Si le localStorage est vide, on initialise favCity comme un tableau vide pour éviter les erreurs
+    // Sinon, on le parse pour le transformer en tableau
+    if (!favCity) {
+        favCity = []
+    } else {
+        favCity = JSON.parse(favCity)
+    }
+
+    //Ajout de la ville en favoris
+    // Si la ville est déjà dans les favoris, on la supprime
+    if (!favCity.includes(city)) {
+        favCity.push(city);
+    } else {
+        favCity.forEach(element => {
+            if (element == city) {
+                favCity.splice(favCity.indexOf(element), 1);
+            }
+        })
+    }
+
+    window.localStorage.setItem(`favCity`, JSON.stringify(favCity)); // On sauvegarde le tableau dans le localStorage
+    favoris()
+}
+
+function favoris() {
+    favCity = window.localStorage.getItem(`favCity`) // On récupère le tableau
+    favCity = JSON.parse(favCity)
+    document.getElementById("favoris").innerHTML = "";
+    for (let i = 0; i < favCity.length; i++) { // On boucle sur le tableau pour afficher les villes
+        document.getElementById("favoris").innerHTML += `
+        <a onclick="goFavoris('${favCity[i]}')">
+        <div class="container text-center rounded-4 mt-2 mb-2">
+            <div class="row">
+                <div class="col">
+                    <img src="assets/img/01.png" alt="météo 12h" class="iconeMeteo" id="meteofav${i}">
+                </div>
+                <div class="col">
+                    <p class="h5 mt-2">${favCity[i]}</p>
+                </div>
+            </div>
+        </div>
+        </a>`;
+        if (city == favCity[i]) {
+            document.getElementById("ajoutFavorisBtn").innerHTML = `<i class="bi bi-star-fill"></i>`
+        } else {
+            document.getElementById("ajoutFavorisBtn").innerHTML = `<i class="bi bi-star"></i>`
+        }
+        iconeFavMeteo() // On appelle la fonction pour afficher les icônes météo des villes favorites
+    }
+}
+
+function iconeFavMeteo() {
+    for (let i = 0; i < favCity.length; i++) {
+        fetch(`https://api.openweathermap.org/data/2.5/weather?q=${favCity[i]}&appid=${apiKey}&lang=${langue}&units=${unite}`)
+            .then(response => response.json())
+            .then(data => {
+                meteoItem = data.list[0]
+                let codeCiel = ciel(meteoItem)
+                document.getElementById(`meteofav${i}`).src = `assets/img/${codeCiel}.png`
+                console.log(`Code ciel pour ${favCity[i]}: ${meteoItem}`)
+
+                function ciel(meteoItem) {
+                    let dansCiel = meteoItem.weather[0].main
+                    let nuage = meteoItem.clouds.all
+                    let pluie = meteoItem.weather[0].id
+                    if (dansCiel == "Clear") {
+                        return "01"
+                    }
+                    if (dansCiel == "Clouds" && nuage < 50) {
+                        return "02"
+                    }
+                    if (dansCiel == "Clouds" && nuage >= 50) {
+                        return "03"
+                    }
+                    if (dansCiel == "Rain" && pluie == 500) {
+                        return "04"
+                    }
+                    if (dansCiel == "Rain" && pluie > 500) {
+                        return "05"
+                    }
+                }
+            })
+            .catch(error => {
+                console.error("Erreur lors de la récupération de l'icône météo :", error);
+            });
+    }
+}
 
 
 function avoirLaMeteo(url) {
