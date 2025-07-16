@@ -38,7 +38,7 @@ function geolocation() {
                 })
         })
     } else {
-        id = "2988507" //Commune française, c rigolo ^^
+        id = "2988507" //C paris française, c rigolo ^^
         url = `https://api.openweathermap.org/data/2.5/forecast?id=${id}&appid=${apiKey}&lang=${langue}&units=${unite}`
         console.log("ville par défault activé")
         avoirLaMeteo(url)
