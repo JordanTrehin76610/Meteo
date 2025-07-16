@@ -40,7 +40,7 @@ function ajoutFavoris(city, country, id) {
     //Ajout de la ville en favoris
     // Si la ville est déjà dans les favoris, on la supprime
     supprCountry = false
-    if (!favCity.includes(city.toUpperCase())) {
+    if (!favCity.includes(city.toUpperCase()) || !favCountry.includes(country.toUpperCase())) {
         favCity.push(city.toUpperCase());
         changeEtoile()
     } else {
