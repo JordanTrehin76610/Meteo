@@ -48,7 +48,7 @@ function ajoutFavoris(city, country, id) {
             if (element == city.toUpperCase()) {
                 changeEtoile()
                 indexSuppr = favCity.indexOf(element) // On récupère l'index de la ville pour supprimer le pays correspondant
-                favCity.splice(favCity.indexOf(element), 1);
+                favCity.splice(indexSuppr, 1);
                 supprCountry = true
                 favCountry.splice(indexSuppr, 1); // On supprime le pays correspondant
                 favId.splice(indexSuppr, 1); // On supprime l'id correspondant
