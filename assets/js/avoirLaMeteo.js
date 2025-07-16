@@ -2,14 +2,16 @@ function avoirLaMeteo(url) {
     fetch(url)
         .then(response => response.json())
         .then(data => {
+            document.getElementById(`corp`).style = "display: block"
+            document.getElementById(`recherche`).style = "display: none"
             favoris()
 
             let meteo = data
-            
+
             let ville = meteo.city.name
             let pays = meteo.city.country
             let id = meteo.city.id
-            
+
             console.log(`ville visée: ${ville}`)
             console.log(data)
 

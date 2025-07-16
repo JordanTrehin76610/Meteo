@@ -26,7 +26,7 @@ function geolocation() {
                 .then(response => response.json())
                 .then(data => {
 
-                    
+
                     //JSON que j'exploite pour chopper le lieu le plus proche
                     city = data[0].name
                     state = data[0].state
@@ -49,21 +49,46 @@ function geolocation() {
 
 
 function lieux() {
-    if (document.getElementById("lieuxChoisie").value.includes(",")) {
-    city = document.getElementById("lieuxChoisie").value
-    url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&lang=${langue}&units=${unite}`
+    {
+        city = document.getElementById("lieuxChoisie").value
+        url = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=5&appid=${apiKey}&lang=${langue}&units=${unite}`
 
-    // TEST SI LA VILLE EST VALIDE EN REGARDER SI L'URL RENVOIE UNE ERREUR 404
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            if (data.cod === "404") {
-                alert("Ville non trouvée !");
-                return;
-            }
-            avoirLaMeteo(url);
-        })
-    } else {
-        alert("Veuillez entrer une ville valide avec le code de son pays\nExemple: \nParis, FR \nNew York, US \nTokyo, JP")
+        // TEST SI LA VILLE EST VALIDE EN REGARDER SI L'URL RENVOIE UNE ERREUR 404
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data)
+                document.getElementById("ajoutRecherche").innerHTML = ""
+                for (let i = 0; i < 5; i++) {
+                    document.getElementById("ajoutRecherche").innerHTML += `
+                        <a onclick="avoirLaMeteo('https://api.openweathermap.org/data/2.5/forecast?q=${data[i].name},${data[i].country}&appid=${apiKey}&lang=${langue}&units=${unite}')" id="result${i}" style="display: block">
+                            <div class="container text-center rounded-4 my-5">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <p class="h3 my-4 ms-3" id="recherche${i}">city</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p class="h3 my-4" id="recherchePays${i}">Pays</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a > `
+                    document.getElementById(`recherche${i}`).textContent = data[i].name
+                    document.getElementById(`recherchePays${i}`).textContent = data[i].country
+                    essaieHTML(`https://api.openweathermap.org/data/2.5/forecast?q=${data[i].name},${data[i].country}&appid=${apiKey}&lang=${langue}&units=${unite}`, i)
+                }
+                
+                // Enlève les doublons
+                for (let i = 0; i < 5; i++) {
+                    for(let o = i+1; o < 5; o++) {
+                        if (document.getElementById(`recherchePays${i}`).textContent == document.getElementById(`recherchePays${o}`).textContent) {
+                            document.getElementById(`result${i}`).style = "display: none"
+                        }
+                    }
+                }
+
+                document.getElementById(`corp`).style = "display: none"
+                document.getElementById(`recherche`).style = "display: block"
+            })
     }
 }

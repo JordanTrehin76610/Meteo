@@ -22,122 +22,135 @@
             onclick="lieux()"><i class="bi bi-arrow-right"></i></button>
     </div>
 
+    <div id="recherche" style="display: none;">
+        <div id="ajoutRecherche">
 
-    
-    <!-- SECTION FAVORIS -->
-    <div class="d-flex justify-content-between mx-lg-5 my-lg-4 favorisBG">
-        <a class="btn btn-primary rounded-0" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button"
-            aria-controls="offcanvasExample">
-            Vos favoris
-        </a>
-        <button type="button" class="btn btn-primary rounded-0" onclick="ajoutFavoris(document.getElementById('ville').textContent, document.getElementById('country').textContent, document.getElementById('id').textContent)" id="ajoutFavorisBtn"><i class="bi bi-star-fill"></i></button>
-    </div>
-    <div class="offcanvas favorisBG offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
-        <div class="offcanvas-header">
-            <h5 class="offcanvas-title" id="offcanvasExampleLabel">Vos favoris</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-        </div>
-        <div class="offcanvas-body">
-            <div>
-                Vous pouvez ajouter des villes à vos favoris en cliquant sur le bouton "Ajouter aux favoris" dans la
-                section météo de la ville.
-            </div>
-            <div class="mt-2" id="favoris"></div> <!-- Ici on affiche les villes favorites -->
         </div>
     </div>
 
 
-
-    <div>
-    <p class="m-3 text-lg-center h1" id="ville">Ville</p><p class="m-3 text-lg-center h6" id="country">Pays</p><p class="m-3 text-lg-center h6" id="id" style="display: none;">ID</p>
-    </div>
-
-    <!-- LA TEMPERATURE MAINTENANT -->
-    <div class="container text-center my-2 rounded-3">
-        <div class="row">
-            <div class="col-4">
-                <img src="assets/img/01.png" alt="météo maintenant" class="iconeMeteoAujourdhui" id="meteoMaintenant">
-            </div>
-            <div class="col-8">
-                <p id="heureMaintenant" class="heure mt-2 text-start">heure</p>
-            </div>
-
+    <div id="corp" style="display: block;">
+        <!-- SECTION FAVORIS -->
+        <div class="d-flex justify-content-between mx-lg-5 my-lg-4 favorisBG">
+            <a class="btn btn-primary rounded-0" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button"
+                aria-controls="offcanvasExample">
+                Vos favoris
+            </a>
+            <button type="button" class="btn btn-primary rounded-0"
+                onclick="ajoutFavoris(document.getElementById('ville').textContent, document.getElementById('country').textContent, document.getElementById('id').textContent)"
+                id="ajoutFavorisBtn"><i class="bi bi-star-fill"></i></button>
         </div>
-        <div class="row">
-            <div class="col border-end border-light border-opacity-25">
-                <p><i class="bi bi-wind h6 " id="ventMaintenant">Vitesse vent</i></p>
+        <div class="offcanvas favorisBG offcanvas-start" tabindex="-1" id="offcanvasExample"
+            aria-labelledby="offcanvasExampleLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasExampleLabel">Vos favoris</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
-            <div class="col border-end border-light border-opacity-25">
-                <p><i class="bi bi-thermometer-half h4" id="températureMaintenant"></i></p>
-            </div>
-            <div class="col">
-                <p><i class="bi bi-emoji-sunglasses h4" id="températureMaintenantRessenti"></i></p>
+            <div class="offcanvas-body">
+                <div>
+                    Vous pouvez ajouter des villes à vos favoris en cliquant sur le bouton "Ajouter aux favoris" dans la
+                    section météo de la ville.
+                </div>
+                <div class="mt-2" id="favoris"></div> <!-- Ici on affiche les villes favorites -->
             </div>
         </div>
-    </div>
 
-    <!-- TEMPERATURE DANS LES HEURES A VENIR -->
-    <div class="container text-center my-5 rounded-4">
-        <div class="row">
-            <div class="col border-end border-light border-opacity-25 pt-2">
-                <img src="assets/img/01.png" alt="météo 3h" class="iconeMeteo" id="meteo3h">
-                <div class="row">
-                    <p id="température3h" class="mt-2 h1"></p>
+
+
+        <div>
+            <p class="m-3 text-lg-center h1" id="ville">Ville</p>
+            <p class="m-3 text-lg-center h6" id="country">Pays</p>
+            <p class="m-3 text-lg-center h6" id="id" style="display: none;">ID</p>
+        </div>
+
+        <!-- LA TEMPERATURE MAINTENANT -->
+        <div class="container text-center my-2 rounded-3">
+            <div class="row">
+                <div class="col-4">
+                    <img src="assets/img/01.png" alt="météo maintenant" class="iconeMeteoAujourdhui"
+                        id="meteoMaintenant">
                 </div>
-                <div class="row">
-                    <p><i class="bi bi-wind vent" id="vent3h">Vitesse vent</i></p>
+                <div class="col-8">
+                    <p id="heureMaintenant" class="heure mt-2 text-start">heure</p>
                 </div>
-                <div class="row h5">
-                    <p>3h</p>
-                </div>
+
             </div>
-            <div class="col border-end border-light border-opacity-25 pt-2">
-                <img src="assets/img/01.png" alt="météo 6h" class="iconeMeteo" id="meteo6h">
-                <div class="row">
-                    <p id="température6h" class="mt-2 h1"></p>
+            <div class="row">
+                <div class="col border-end border-light border-opacity-25">
+                    <p><i class="bi bi-wind h6 " id="ventMaintenant">Vitesse vent</i></p>
                 </div>
-                <div class="row">
-                    <p><i class="bi bi-wind vent" id="vent6h">Vitesse vent</i></p>
+                <div class="col border-end border-light border-opacity-25">
+                    <p><i class="bi bi-thermometer-half h4" id="températureMaintenant"></i></p>
                 </div>
-                <div class="row h5">
-                    <p>6h</p>
-                </div>
-            </div>
-            <div class="col border-end border-light border-opacity-25 pt-2">
-                <img src="assets/img/01.png" alt="météo 9h" class="iconeMeteo" id="meteo9h">
-                <div class="row">
-                    <p id="température9h" class="mt-2 h1"></p>
-                </div>
-                <div class="row">
-                    <p><i class="bi bi-wind vent" id="vent9h">Vitesse vent</i></p>
-                </div>
-                <div class="row h5">
-                    <p>9h</p>
-                </div>
-            </div>
-            <div class="col pt-2">
-                <img src="assets/img/01.png" alt="météo 12h" class="iconeMeteo" id="meteo12h">
-                <div class="row">
-                    <p id="température12h" class="mt-2 h1"></p>
-                </div>
-                <div class="row">
-                    <p><i class="bi bi-wind vent" id="vent12h">Vitesse vent</i></p>
-                </div>
-                <div class="row h5">
-                    <p>12h</p>
+                <div class="col">
+                    <p><i class="bi bi-emoji-sunglasses h4" id="températureMaintenantRessenti"></i></p>
                 </div>
             </div>
         </div>
+
+        <!-- TEMPERATURE DANS LES HEURES A VENIR -->
+        <div class="container text-center my-5 rounded-4">
+            <div class="row">
+                <div class="col border-end border-light border-opacity-25 pt-2">
+                    <img src="assets/img/01.png" alt="météo 3h" class="iconeMeteo" id="meteo3h">
+                    <div class="row">
+                        <p id="température3h" class="mt-2 h1"></p>
+                    </div>
+                    <div class="row">
+                        <p><i class="bi bi-wind vent" id="vent3h">Vitesse vent</i></p>
+                    </div>
+                    <div class="row h5">
+                        <p>3h</p>
+                    </div>
+                </div>
+                <div class="col border-end border-light border-opacity-25 pt-2">
+                    <img src="assets/img/01.png" alt="météo 6h" class="iconeMeteo" id="meteo6h">
+                    <div class="row">
+                        <p id="température6h" class="mt-2 h1"></p>
+                    </div>
+                    <div class="row">
+                        <p><i class="bi bi-wind vent" id="vent6h">Vitesse vent</i></p>
+                    </div>
+                    <div class="row h5">
+                        <p>6h</p>
+                    </div>
+                </div>
+                <div class="col border-end border-light border-opacity-25 pt-2">
+                    <img src="assets/img/01.png" alt="météo 9h" class="iconeMeteo" id="meteo9h">
+                    <div class="row">
+                        <p id="température9h" class="mt-2 h1"></p>
+                    </div>
+                    <div class="row">
+                        <p><i class="bi bi-wind vent" id="vent9h">Vitesse vent</i></p>
+                    </div>
+                    <div class="row h5">
+                        <p>9h</p>
+                    </div>
+                </div>
+                <div class="col pt-2">
+                    <img src="assets/img/01.png" alt="météo 12h" class="iconeMeteo" id="meteo12h">
+                    <div class="row">
+                        <p id="température12h" class="mt-2 h1"></p>
+                    </div>
+                    <div class="row">
+                        <p><i class="bi bi-wind vent" id="vent12h">Vitesse vent</i></p>
+                    </div>
+                    <div class="row h5">
+                        <p>12h</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- JOUR SUIVANT-->
+        <div id="jourSuivant">
+
+        </div>
+
     </div>
-
-    <!-- JOUR SUIVANT-->
-    <div id="jourSuivant">
-
-    </div>
-
-
 
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="assets/js/essaieHTML.js"></script>
     <script src="assets/js/avoirLaMeteo.js"></script>
     <script src="assets/js/favoris.js"></script>
     <script src="assets/js/script.js"></script>
