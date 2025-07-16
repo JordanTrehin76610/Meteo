@@ -8,8 +8,8 @@ let url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${ap
 let cityAllFav = []
 
 
-favoris()
 geolocation()
+
 
 
 function geolocation() {
@@ -64,8 +64,8 @@ function lieux() {
         })
 }
 
-function goFavoris(city) {
-    url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&lang=${langue}&units=${unite}`
+function goFavoris(city, country) {
+    url = `https://api.openweathermap.org/data/2.5/forecast?q=${city},${country}&appid=${apiKey}&lang=${langue}&units=${unite}`
 
     // TEST SI LA VILLE EST VALIDE EN REGARDER SI L'URL RENVOIE UNE ERREUR 404
     fetch(url)
@@ -80,8 +80,9 @@ function goFavoris(city) {
 }
 
 
-function ajoutFavoris() {
+function ajoutFavoris(city, country) {
     favCity = window.localStorage.getItem(`favCity`)
+    favCountry = window.localStorage.getItem(`favCountry`)
 
     // Si le localStorage est vide, on initialise favCity comme un tableau vide pour éviter les erreurs
     // Sinon, on le parse pour le transformer en tableau
@@ -90,97 +91,148 @@ function ajoutFavoris() {
     } else {
         favCity = JSON.parse(favCity)
     }
+    if (!favCountry) {
+        favCountry = []
+    } else {
+        favCountry = JSON.parse(favCountry)
+    }
 
     //Ajout de la ville en favoris
     // Si la ville est déjà dans les favoris, on la supprime
+    supprCountry = false
     if (!favCity.includes(city)) {
         favCity.push(city);
     } else {
         favCity.forEach(element => {
             if (element == city) {
                 favCity.splice(favCity.indexOf(element), 1);
+                supprCountry = true
+                EmplacementCountry = favCity.indexOf(element) // On récupère l'index de la ville pour supprimer le pays correspondant
+                favCountry.splice(EmplacementCountry, 1); // On supprime le pays correspondant
             }
         })
     }
+    if (supprCountry == false) {
+        favCountry.push(country);
+    }
 
     window.localStorage.setItem(`favCity`, JSON.stringify(favCity)); // On sauvegarde le tableau dans le localStorage
+    window.localStorage.setItem(`favCountry`, JSON.stringify(favCountry)); // On sauvegarde le tableau dans le localStorage
     favoris()
 }
 
 function favoris() {
     favCity = window.localStorage.getItem(`favCity`) // On récupère le tableau
-    favCity = JSON.parse(favCity)
+    favCountry = window.localStorage.getItem(`favCountry`) // On récupère le tableau des pays
+
+    if (!favCity) {
+        favCity = []
+    } else {
+        favCity = JSON.parse(favCity)
+    }
+    if (!favCountry) {
+        favCountry = []
+    } else {
+        favCountry = JSON.parse(favCountry)
+    }
+
     document.getElementById("favoris").innerHTML = "";
     for (let i = 0; i < favCity.length; i++) { // On boucle sur le tableau pour afficher les villes
         document.getElementById("favoris").innerHTML += `
-        <a onclick="goFavoris('${favCity[i]}')">
+        <a onclick="goFavoris('${favCity[i]}, ${favCountry[i]}')">
         <div class="container text-center rounded-4 mt-2 mb-2">
             <div class="row">
-                <div class="col">
-                    <img src="assets/img/01.png" alt="météo 12h" class="iconeMeteo" id="meteofav${i}">
+                <div class="col-2">
+                    <p class="h5 mt-3 ms-3" id="tempFav${i}">temp</p>
                 </div>
-                <div class="col">
-                    <p class="h5 mt-2">${favCity[i]}</p>
+                <div class="col-5">
+                    <img src="assets/img/01.png" alt="météo ${favCity[i]}" class="iconeMeteo mt-2" id="meteofav${i}">
+                </div>
+                <div class="col-5">
+                    <p class="h5">${favCity[i]}</p>
+                    <p class="h5">${favCountry[i]}</p>
                 </div>
             </div>
         </div>
         </a>`;
-        if (city == favCity[i]) {
-            document.getElementById("ajoutFavorisBtn").innerHTML = `<i class="bi bi-star-fill"></i>`
-        } else {
-            document.getElementById("ajoutFavorisBtn").innerHTML = `<i class="bi bi-star"></i>`
-        }
-        iconeFavMeteo() // On appelle la fonction pour afficher les icônes météo des villes favorites
+
+        changeEtoile() // On appelle la fonction pour changer l'icône du bouton d'ajout aux favoris
+        iconeTempFav(favCity[i], favCountry[i], i) // On appelle la fonction pour afficher les icônes météo des villes favorites
     }
 }
 
-function iconeFavMeteo() {
-    for (let i = 0; i < favCity.length; i++) {
-        fetch(`https://api.openweathermap.org/data/2.5/weather?q=${favCity[i]}&appid=${apiKey}&lang=${langue}&units=${unite}`)
-            .then(response => response.json())
-            .then(data => {
-                meteoItem = data.list[0]
-                let codeCiel = ciel(meteoItem)
-                document.getElementById(`meteofav${i}`).src = `assets/img/${codeCiel}.png`
-                console.log(`Code ciel pour ${favCity[i]}: ${meteoItem}`)
+function changeEtoile() {
+    favCity = window.localStorage.getItem(`favCity`) // On récupère le tableau
+    favCountry = window.localStorage.getItem(`favCountry`) // On récupère le tableau des pays
 
-                function ciel(meteoItem) {
-                    let dansCiel = meteoItem.weather[0].main
-                    let nuage = meteoItem.clouds.all
-                    let pluie = meteoItem.weather[0].id
-                    if (dansCiel == "Clear") {
-                        return "01"
-                    }
-                    if (dansCiel == "Clouds" && nuage < 50) {
-                        return "02"
-                    }
-                    if (dansCiel == "Clouds" && nuage >= 50) {
-                        return "03"
-                    }
-                    if (dansCiel == "Rain" && pluie == 500) {
-                        return "04"
-                    }
-                    if (dansCiel == "Rain" && pluie > 500) {
-                        return "05"
-                    }
+    if (!favCity) {
+        favCity = []
+    } else {
+        favCity = JSON.parse(favCity)
+    }
+    if (!favCountry) {
+        favCountry = []
+    } else {
+        favCountry = JSON.parse(favCountry)
+    }
+
+
+    isFavori = favCity.includes(document.getElementById("ville").textContent) && favCountry.includes(document.getElementById("country").textContent) // On vérifie si la ville et le pays actuelle est dans les favoris
+    ajoutFavorisBtn.innerHTML = isFavori ? `<i class="bi bi-star-fill"></i>` : `<i class="bi bi-star"></i>` // On change l'icône du bouton d'ajout aux favoris
+}
+
+function iconeTempFav(city, country, i) {
+    url = `https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${apiKey}&lang=${langue}&units=${unite}`
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            meteoItem = data
+            console.log(`Météo pour ${city}:`, meteoItem)
+            iconeFavMeteoHTML = cielFav(meteoItem)
+            iconeFavMeteoAChanger = `assets/img/${iconeFavMeteoHTML}.png`
+            document.getElementById(`tempFav${i}`).textContent = `${Math.round(meteoItem.main.temp)}°`
+            document.getElementById(`meteofav${i}`).src = `assets/img/${iconeFavMeteoHTML}.png`
+
+            function cielFav(meteoItem) {
+                let dansCiel = meteoItem.weather[0].main
+                let nuage = meteoItem.clouds.all
+                let pluie = meteoItem.weather[0].id
+                if (dansCiel == "Clear") {
+                    return "01"
                 }
-            })
-            .catch(error => {
-                console.error("Erreur lors de la récupération de l'icône météo :", error);
-            });
-    }
+                else if (dansCiel == "Clouds" && nuage < 50) {
+                    return "02"
+                }
+                else if (dansCiel == "Clouds" && nuage >= 50) {
+                    return "03"
+                }
+                else if (dansCiel == "Rain" && pluie <= 500) {
+                    return "04"
+                }
+                else if (dansCiel == "Rain" && pluie > 500) {
+                    return "05"
+                }
+            }
+        })
+        .catch(error => {
+            console.error("Erreur lors de la récupération de l'icône météo :", error);
+        });
 }
+
 
 
 function avoirLaMeteo(url) {
     fetch(url)
         .then(response => response.json())
         .then(data => {
+            changeEtoile() // On change l'icône du bouton d'ajout aux favoris
+            favoris()
 
             console.log(data)
             let meteo = data
 
             let ville = meteo.city.name
+            let pays = meteo.city.country
             console.log(`ville visée: ${ville}`)
 
             let tempMaintenant = Math.round(meteo.list[0].main.temp)
@@ -247,6 +299,7 @@ function avoirLaMeteo(url) {
 
             // MODIF INTERFACE MAINTENANT
             document.getElementById("ville").innerText = ville
+            document.getElementById("country").innerText = pays
             document.getElementById("heureMaintenant").innerText = maintenant.join("")
             document.getElementById("températureMaintenant").textContent = `${tempMaintenant}°`
             document.getElementById("températureMaintenantRessenti").innerText = `${tempMaintenantRessent}°`
@@ -368,7 +421,7 @@ function avoirLaMeteo(url) {
                 if (dansCiel == "Clouds" && nuage >= 50) {
                     return "03"
                 }
-                if (dansCiel == "Rain" && pluie == 500) {
+                if (dansCiel == "Rain" && pluie <= 500) {
                     return "04"
                 }
                 if (dansCiel == "Rain" && pluie > 500) {

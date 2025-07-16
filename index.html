@@ -30,7 +30,7 @@
             aria-controls="offcanvasExample">
             Vos favoris
         </a>
-        <button type="button" class="btn btn-primary rounded-0" onclick="ajoutFavoris()" id="ajoutFavorisBtn"><i class="bi bi-star"></i></button>
+        <button type="button" class="btn btn-primary rounded-0" onclick="ajoutFavoris(document.getElementById('ville').textContent, document.getElementById('country').textContent)" id="ajoutFavorisBtn"></button>
     </div>
     <div class="offcanvas favorisBG offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
         <div class="offcanvas-header">
@@ -48,8 +48,9 @@
 
 
 
-
-    <h1 class="m-3 text-lg-center" id="ville">Ville</h1>
+    <div>
+    <p class="m-3 text-lg-center h1" id="ville">Ville</p><p class="m-3 text-lg-center h6" id="country">Pays</p>
+    </div>
 
     <!-- LA TEMPERATURE MAINTENANT -->
     <div class="container text-center my-2 rounded-3">
