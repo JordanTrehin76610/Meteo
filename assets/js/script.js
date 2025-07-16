@@ -26,20 +26,20 @@ function geolocation() {
                 .then(response => response.json())
                 .then(data => {
 
-                    console.log(data)
-
+                    
                     //JSON que j'exploite pour chopper le lieu le plus proche
                     city = data[0].name
                     state = data[0].state
                     country = data[0].country
                     console.log(`ville: ${city}, state: ${state} et country: ${country}`)
+                    console.log(data)
                     url = `http://api.openweathermap.org/data/2.5/forecast?q=${city},${state},${country}&appid=${apiKey}&lang=${langue}&units=${unite}`
                     avoirLaMeteo(url)
                 })
         })
     } else {
-        city = "aucun" //Commune française, c rigolo ^^
-        url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&lang=${langue}&units=${unite}`
+        id = "2988507" //Commune française, c rigolo ^^
+        url = `https://api.openweathermap.org/data/2.5/forecast?id=${id}&appid=${apiKey}&lang=${langue}&units=${unite}`
         console.log("ville par défault activé")
         avoirLaMeteo(url)
     }
@@ -49,6 +49,7 @@ function geolocation() {
 
 
 function lieux() {
+    if (document.getElementById("lieuxChoisie").value.includes(",")) {
     city = document.getElementById("lieuxChoisie").value
     url = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=${apiKey}&lang=${langue}&units=${unite}`
 
@@ -62,10 +63,13 @@ function lieux() {
             }
             avoirLaMeteo(url);
         })
+    } else {
+        alert("Veuillez entrer une ville valide avec le code de son pays\nExemple: \nParis, FR \nNew York, US \nTokyo, JP")
+    }
 }
 
-function goFavoris(city, country) {
-    url = `https://api.openweathermap.org/data/2.5/forecast?q=${city},${country}&appid=${apiKey}&lang=${langue}&units=${unite}`
+function goFavoris(id) {
+    url = `https://api.openweathermap.org/data/2.5/forecast?id=${id}&appid=${apiKey}&lang=${langue}&units=${unite}`
 
     // TEST SI LA VILLE EST VALIDE EN REGARDER SI L'URL RENVOIE UNE ERREUR 404
     fetch(url)
@@ -80,9 +84,10 @@ function goFavoris(city, country) {
 }
 
 
-function ajoutFavoris(city, country) {
+function ajoutFavoris(city, country, id) {
     favCity = window.localStorage.getItem(`favCity`)
     favCountry = window.localStorage.getItem(`favCountry`)
+    favId = window.localStorage.getItem(`favId`)
 
     // Si le localStorage est vide, on initialise favCity comme un tableau vide pour éviter les erreurs
     // Sinon, on le parse pour le transformer en tableau
@@ -96,34 +101,46 @@ function ajoutFavoris(city, country) {
     } else {
         favCountry = JSON.parse(favCountry)
     }
+    if (!favId) {
+        favId = []
+    } else {
+        favId = JSON.parse(favId)
+    }
 
     //Ajout de la ville en favoris
     // Si la ville est déjà dans les favoris, on la supprime
     supprCountry = false
-    if (!favCity.includes(city)) {
-        favCity.push(city);
+    if (!favCity.includes(city.toUpperCase())) {
+        favCity.push(city.toUpperCase());
+        changeEtoile()
     } else {
         favCity.forEach(element => {
-            if (element == city) {
+            if (element == city.toUpperCase()) {
+                changeEtoile()
+                indexSuppr = favCity.indexOf(element) // On récupère l'index de la ville pour supprimer le pays correspondant
                 favCity.splice(favCity.indexOf(element), 1);
                 supprCountry = true
-                EmplacementCountry = favCity.indexOf(element) // On récupère l'index de la ville pour supprimer le pays correspondant
-                favCountry.splice(EmplacementCountry, 1); // On supprime le pays correspondant
+                favCountry.splice(indexSuppr, 1); // On supprime le pays correspondant
+                favId.splice(indexSuppr, 1); // On supprime l'id correspondant
             }
         })
     }
     if (supprCountry == false) {
         favCountry.push(country);
     }
-
+    if (supprCountry == false) {
+        favId.push(id)
+    }
     window.localStorage.setItem(`favCity`, JSON.stringify(favCity)); // On sauvegarde le tableau dans le localStorage
     window.localStorage.setItem(`favCountry`, JSON.stringify(favCountry)); // On sauvegarde le tableau dans le localStorage
+    window.localStorage.setItem(`favId`, JSON.stringify(favId)); // On sauvegarde le tableau dans le localStorage
     favoris()
 }
 
 function favoris() {
     favCity = window.localStorage.getItem(`favCity`) // On récupère le tableau
     favCountry = window.localStorage.getItem(`favCountry`) // On récupère le tableau des pays
+    favId = window.localStorage.getItem(`favId`) // On récupère le tableau des id
 
     if (!favCity) {
         favCity = []
@@ -135,11 +152,16 @@ function favoris() {
     } else {
         favCountry = JSON.parse(favCountry)
     }
+    if (!favId) {
+        favId = []
+    } else {
+        favId = JSON.parse(favId)
+    }
 
     document.getElementById("favoris").innerHTML = "";
     for (let i = 0; i < favCity.length; i++) { // On boucle sur le tableau pour afficher les villes
         document.getElementById("favoris").innerHTML += `
-        <a onclick="goFavoris('${favCity[i]}, ${favCountry[i]}')">
+        <a onclick="goFavoris('${favId[i]}')">
         <div class="container text-center rounded-4 mt-2 mb-2">
             <div class="row">
                 <div class="col-2">
@@ -156,38 +178,33 @@ function favoris() {
         </div>
         </a>`;
 
-        changeEtoile() // On appelle la fonction pour changer l'icône du bouton d'ajout aux favoris
-        iconeTempFav(favCity[i], favCountry[i], i) // On appelle la fonction pour afficher les icônes météo des villes favorites
+        iconeTempFav(favId[i], favCity[i], i) // On appelle la fonction pour afficher les icônes météo des villes favorites
     }
 }
 
 function changeEtoile() {
-    favCity = window.localStorage.getItem(`favCity`) // On récupère le tableau
-    favCountry = window.localStorage.getItem(`favCountry`) // On récupère le tableau des pays
-
-    if (!favCity) {
-        favCity = []
+    if (document.getElementById("ajoutFavorisBtn").innerHTML == `<i class="bi bi-star-fill"></i>`) {
+        document.getElementById("ajoutFavorisBtn").innerHTML = `<i class="bi bi-star"></i>`;
     } else {
-        favCity = JSON.parse(favCity)
+        document.getElementById("ajoutFavorisBtn").innerHTML = `<i class="bi bi-star-fill"></i>`;
     }
-    if (!favCountry) {
-        favCountry = []
-    } else {
-        favCountry = JSON.parse(favCountry)
-    }
-
-
-    isFavori = favCity.includes(document.getElementById("ville").textContent) && favCountry.includes(document.getElementById("country").textContent) // On vérifie si la ville et le pays actuelle est dans les favoris
-    ajoutFavorisBtn.innerHTML = isFavori ? `<i class="bi bi-star-fill"></i>` : `<i class="bi bi-star"></i>` // On change l'icône du bouton d'ajout aux favoris
 }
 
-function iconeTempFav(city, country, i) {
-    url = `https://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${apiKey}&lang=${langue}&units=${unite}`
+function updateEtoile() {
+    idfav = window.localStorage.getItem(`favId`)
+    if (idfav.includes(document.getElementById("id").textContent)) {
+        document.getElementById("ajoutFavorisBtn").innerHTML = `<i class="bi bi-star-fill"></i>`;
+    } else {
+        document.getElementById("ajoutFavorisBtn").innerHTML = `<i class="bi bi-star"></i>`;
+    }
+}
+
+function iconeTempFav(id, city, i) {
+    url = `https://api.openweathermap.org/data/2.5/forecast?id=${id}&appid=${apiKey}&lang=${langue}&units=${unite}`
     fetch(url)
         .then(response => response.json())
         .then(data => {
-            meteoItem = data
-            console.log(`Météo pour ${city}:`, meteoItem)
+            meteoItem = data.list[0]
             iconeFavMeteoHTML = cielFav(meteoItem)
             iconeFavMeteoAChanger = `assets/img/${iconeFavMeteoHTML}.png`
             document.getElementById(`tempFav${i}`).textContent = `${Math.round(meteoItem.main.temp)}°`
@@ -225,15 +242,16 @@ function avoirLaMeteo(url) {
     fetch(url)
         .then(response => response.json())
         .then(data => {
-            changeEtoile() // On change l'icône du bouton d'ajout aux favoris
             favoris()
 
-            console.log(data)
             let meteo = data
-
+            
             let ville = meteo.city.name
             let pays = meteo.city.country
+            let id = meteo.city.id
+            
             console.log(`ville visée: ${ville}`)
+            console.log(data)
 
             let tempMaintenant = Math.round(meteo.list[0].main.temp)
 
@@ -300,6 +318,7 @@ function avoirLaMeteo(url) {
             // MODIF INTERFACE MAINTENANT
             document.getElementById("ville").innerText = ville
             document.getElementById("country").innerText = pays
+            document.getElementById("id").innerText = id
             document.getElementById("heureMaintenant").innerText = maintenant.join("")
             document.getElementById("températureMaintenant").textContent = `${tempMaintenant}°`
             document.getElementById("températureMaintenantRessenti").innerText = `${tempMaintenantRessent}°`
@@ -429,6 +448,7 @@ function avoirLaMeteo(url) {
                 }
 
             }
+            updateEtoile() // On change l'icône du bouton d'ajout aux favoris
 
         })
 }
