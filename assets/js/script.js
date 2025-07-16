@@ -57,6 +57,9 @@ function lieux() {
         fetch(url)
             .then(response => response.json())
             .then(data => {
+                if (data.length <= 0) {
+                    alert("Ville non trouvée !");
+                } else {
                 console.log(data)
                 document.getElementById("ajoutRecherche").innerHTML = ""
                 for (let i = 0; i < 5; i++) {
@@ -77,10 +80,10 @@ function lieux() {
                     document.getElementById(`recherchePays${i}`).textContent = data[i].country
                     essaieHTML(`https://api.openweathermap.org/data/2.5/forecast?q=${data[i].name},${data[i].country}&appid=${apiKey}&lang=${langue}&units=${unite}`, i)
                 }
-                
+
                 // Enlève les doublons
                 for (let i = 0; i < 5; i++) {
-                    for(let o = i+1; o < 5; o++) {
+                    for (let o = i + 1; o < 5; o++) {
                         if (document.getElementById(`recherchePays${i}`).textContent == document.getElementById(`recherchePays${o}`).textContent) {
                             document.getElementById(`result${i}`).style = "display: none"
                         }
@@ -89,6 +92,6 @@ function lieux() {
 
                 document.getElementById(`corp`).style = "display: none"
                 document.getElementById(`recherche`).style = "display: block"
-            })
+            }})
     }
 }
